@@ -1,0 +1,52 @@
+####### Database configuration
+#ds:
+#  driverClassName: oracle.jdbc.driver.OracleDriver
+#  url: jdbc:oracle:thin:@localhost:1521:ES
+#  DBusername: 
+#  password: 
+
+############ redis ############ 
+redis:
+  host: localhost
+  port: 6379
+  password: 
+  salt: 
+
+############ solr ############ 
+#solr.host=http://localhost:8983/solr/gettingstarted
+solr:
+  host: http://localhost:8983/solr/db
+  home: 
+
+############ SALT ############ 
+SALT: LLisMoon
+ 
+############ eureka ############ 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+############ log ############ 
+logging:
+  path: ./log
+
+############ mq ############ 
+mq:
+  host: localhost
+  port: 5672
+  queueName1: LLQUEUE
+
+############ upload ############ 
+upload:
+  maxUploadSize: 15M
+  encoding: UTF-8
+
+############ spring ############ 
+spring:
+  profiles:
+    active: dev, noEureka
+  resources:
+    chain:
+      cache: false
+
