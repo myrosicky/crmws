@@ -1,4 +1,4 @@
-package org.stockws.po;
+package org.stockws.model;
 
 public class Dictionary {
 	public enum Status {

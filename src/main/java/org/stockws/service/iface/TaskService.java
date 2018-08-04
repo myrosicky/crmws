@@ -4,8 +4,9 @@ import java.util.List;
 
 
 
-import org.stockws.po.Task;
-import org.stockws.po.Dictionary.Status;
+
+import org.stockws.model.Task;
+import org.stockws.model.Dictionary.Status;
 
 public interface TaskService {
 	

@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.stockws.dao.iface.UserDao;
-import org.stockws.po.CrmUser;
+import org.stockws.dao.UserDao;
+import org.stockws.model.CrmUser;
 import org.stockws.service.iface.UserOpsService;
 import org.stockws.util.CipherUtil;
 
@@ -34,7 +34,7 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 */
 	@Override
 	public void saveUser(CrmUser user) {
-		userDao.saveUser(user);
+		userDao.save(user);
 	}
 
 	/* (non-Javadoc)

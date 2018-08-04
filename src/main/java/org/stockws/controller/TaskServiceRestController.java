@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.stockws.po.Task;
-import org.stockws.po.Dictionary.Status;
+import org.stockws.model.Task;
+import org.stockws.model.Dictionary.Status;
 import org.stockws.service.iface.TaskService;
 
 @RestController

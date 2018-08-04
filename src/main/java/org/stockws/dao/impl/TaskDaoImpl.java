@@ -1,53 +1,10 @@
-package org.stockws.dao;
-
-import java.util.List;
+package org.stockws.dao.impl;
 
 import org.springframework.stereotype.Repository;
-import org.stockws.dao.iface.TaskDao;
-import org.stockws.po.Dictionary.Status;
-import org.stockws.po.Task;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
-public class TaskDaoImpl implements TaskDao {
+public class TaskDaoImpl  {
 
-	@Override
-	public Task getTask(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Task findTasksByStatus(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Task findTask(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Task> findTasksByStatus(Status status, Integer fromIndex,
-			Integer toIndex) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int saveTask(Task task) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int deleteTask(Task task) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 //	private ObjectMapper objectMapper = new ObjectMapper();
 //	

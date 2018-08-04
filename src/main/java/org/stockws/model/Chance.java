@@ -1,9 +1,9 @@
-package org.stockws.po;
+package org.stockws.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import org.stockws.po.Dictionary.Category;
+import org.stockws.model.Dictionary.Category;
 
 
 public class Chance implements Serializable {

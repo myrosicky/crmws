@@ -1,4 +1,4 @@
-package org.stockws.po;
+package org.stockws.model;
 
 public enum DictionaryEnum {
 	A;

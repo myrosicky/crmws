@@ -26,15 +26,18 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@Configuration
-@EnableWebSecurity
+//@Configuration
+//@EnableWebSecurity
 public class WebSecurityContext extends WebSecurityConfigurerAdapter {
 
 	
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("marissa").password("koala").roles("USER").and().withUser("paul")
-                .password("emu").roles("USER");
+        auth
+        	.inMemoryAuthentication()
+        	.withUser("marissa").password("koala").roles("USER")
+        	.and()
+        	.withUser("paul").password("emu").roles("USER");
     }
 
     @Override
@@ -51,10 +54,12 @@ public class WebSecurityContext extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-                 http
+         http
+            .requestMatchers().antMatchers("/login", "/oauth/authorize", "/test")
+                .and()
             .authorizeRequests()
-                .antMatchers("/login", "/user").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/login", "/test").permitAll()
+                .anyRequest().hasRole("USER")
                 .and()
             .exceptionHandling()
                 .accessDeniedPage("/login.jsp?authorization_error=true")
@@ -63,20 +68,16 @@ public class WebSecurityContext extends WebSecurityConfigurerAdapter {
                 .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
                 .disable()
             .logout()
-            	.logoutUrl("/logout")
-                .logoutSuccessUrl("/login.jsp")
                 .and()
             .formLogin()
-            	.loginProcessingUrl("/login")
-                .failureUrl("/login.jsp?authentication_error=true")
-                .loginPage("/login.jsp");
+            ;
         // @formatter:on
     }
 	
 	private static final String API_RESOURCE_ID = "sparklr";
 
-	@Configuration
-	@EnableResourceServer
+//	@Configuration
+//	@EnableResourceServer
 	protected static class ResourceServer extends ResourceServerConfigurerAdapter {
 
 		@Override
@@ -111,24 +112,20 @@ public class WebSecurityContext extends WebSecurityConfigurerAdapter {
 
 	}
 
-	@Configuration
-	@EnableAuthorizationServer
+//	@Configuration
+//	@EnableAuthorizationServer
 	protected static class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 
 		@Autowired
 		private TokenStore tokenStore;
 
-		@Autowired
-		private UserApprovalHandler userApprovalHandler;
+//		@Autowired
+//		private UserApprovalHandler userApprovalHandler;
 
 		@Autowired
 		@Qualifier("authenticationManagerBean")
 		private AuthenticationManager authenticationManager;
 
-//		@Value("${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}")
-//		private String tonrRedirectUri;
-
-		
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
@@ -180,11 +177,14 @@ public class WebSecurityContext extends WebSecurityConfigurerAdapter {
 //		                .autoApprove(true)
 //		             .and()
 		            .withClient("test-client")
+		            	.resourceIds(API_RESOURCE_ID)
 		            	.secret("secret")
 		                .authorizedGrantTypes("authorization_code")
 		                .authorities("ROLE_CLIENT")
 		                .scopes("read")
 		                .autoApprove(true)
+		                .accessTokenValiditySeconds(600)
+		                .refreshTokenValiditySeconds(900)
 		                ;
 			
 			// @formatter:on
@@ -197,8 +197,10 @@ public class WebSecurityContext extends WebSecurityConfigurerAdapter {
 
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-			endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
-					.authenticationManager(authenticationManager);
+			endpoints.tokenStore(tokenStore)
+//					.userApprovalHandler(userApprovalHandler)
+					.authenticationManager(authenticationManager)
+					;
 		}
 
 		@Override

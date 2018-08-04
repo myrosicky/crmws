@@ -1,11 +1,15 @@
-package org.stockws.po;
+package org.stockws.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import org.stockws.po.Dictionary.Category;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+import org.stockws.model.Dictionary.Category;
+import org.stockws.model.Dictionary.Status;
 
+@Entity
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +18,9 @@ public class Task implements Serializable {
 	private Category category;
 	private Date generateDate, deadLine;
 	private long creatorID, managerID;
+	private Status status;
+	
+	@Id
 	private long id;
 
 	public Task(Category category, String content, Date deadLine, long userID) {
@@ -25,6 +32,20 @@ public class Task implements Serializable {
 		this.creatorID = userID;
 		this.managerID = userID;
 	}
+
+	
+	
+	public Status getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+
 
 	public Category getCategory() {
 		return category;

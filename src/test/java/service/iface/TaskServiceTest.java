@@ -11,7 +11,7 @@ import org.stockws.context.WebMvcContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes={WebMvcContext.class,org.stockws.context.DataSourceConfig.class,org.stockws.context.DispatcherServletInitializer.class,org.stockws.context.JpaContext.class,org.stockws.context.RedisContext.class})
+//@ContextConfiguration(classes={WebMvcContext.class,org.stockws.context.DataSourceConfig.class,org.stockws.context.DispatcherServletInitializer.class,org.stockws.context.JpaContext.class,org.stockws.context.RedisContext.class})
 public class TaskServiceTest {
 
 	@Test

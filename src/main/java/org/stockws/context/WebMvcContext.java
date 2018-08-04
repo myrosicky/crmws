@@ -28,7 +28,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 //@Configuration
 @ComponentScan(basePackages = { "controller", "service", "context", "util", "dao" })
-@PropertySource("classpath:config.properties")
 public class WebMvcContext extends WebMvcConfigurationSupport {
 
 	@Autowired

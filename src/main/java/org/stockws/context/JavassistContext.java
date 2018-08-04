@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 
-@Configuration
+//@Configuration
 public class JavassistContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JavassistContext.class);

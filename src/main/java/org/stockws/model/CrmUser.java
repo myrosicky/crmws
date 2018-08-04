@@ -1,8 +1,6 @@
-package org.stockws.po;
+package org.stockws.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,6 +13,7 @@ import javax.persistence.Table;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+	
 /**
  * the persistence class of Buser Table
  * 

@@ -1,14 +1,15 @@
 package org.stockws.controller;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/test.do")
+@RestController
+@RequestMapping("/test")
 public class TestController {
 
-	@RequestMapping("/haha.do")
+	@GetMapping("/haha.do")
 	public String haha(@RequestParam("name") String name){
 		return "haha,"+ name;
 	}

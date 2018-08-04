@@ -8,15 +8,17 @@ import java.util.List;
 
 
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.stockws.dao.iface.TaskDao;
-import org.stockws.po.DictionaryItem;
-import org.stockws.po.Task;
-import org.stockws.po.Dictionary.Status;
+import org.stockws.dao.TaskDao;
+import org.stockws.model.DictionaryItem;
+import org.stockws.model.Task;
+import org.stockws.model.Dictionary.Status;
 import org.stockws.service.iface.TaskService;
 
 @Service
@@ -43,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
 		logger.info("newTask.getId():" + newTask.getId());
 		logger.info("newTask.getDeadLine():" + newTask.getDeadLine());
 		try {
-			taskDao.saveTask(newTask);
+			taskDao.save(newTask);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -52,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public void removeTask(Task task) {
 		 try {
-			taskDao.deleteTask(task);
+			taskDao.deleteTaskById(task.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

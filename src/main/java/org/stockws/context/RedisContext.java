@@ -15,7 +15,7 @@ public class RedisContext {
 	
 	private final static Logger log = LoggerFactory.getLogger(RedisContext.class);
 	
-	private @Value("${redis.hostName}") String host;
+	private @Value("${redis.host}") String host;
 	private @Value("${redis.port}") String port;
 	private @Value("${redis.password}") String password;
 	private @Value("${redis.salt}") String salt;

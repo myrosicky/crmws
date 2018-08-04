@@ -1,4 +1,4 @@
-package org.stockws.po;
+package org.stockws.model;
 
 import java.io.Serializable;
 import java.util.Date;

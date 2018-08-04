@@ -2,7 +2,7 @@ package org.stockws.service.iface;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.stockws.po.CrmUser;
+import org.stockws.model.CrmUser;
 
 import com.google.common.base.Optional;
 

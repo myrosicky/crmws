@@ -26,12 +26,12 @@ public class DispatcherServletInitializer extends
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[] { WebMvcContext.class, DataSourceConfig.class };
+		return new Class<?>[] { WebMvcContext.class };
 	}
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class<?>[] { WebMvcContext.class, DataSourceConfig.class };
+		return new Class<?>[] { WebMvcContext.class };
 	}
 
 	@Override

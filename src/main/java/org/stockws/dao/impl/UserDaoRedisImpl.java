@@ -1,31 +1,9 @@
-package org.stockws.dao;
-
-import java.util.concurrent.CopyOnWriteArrayList;
+package org.stockws.dao.impl;
 
 import org.springframework.stereotype.Repository;
-import org.stockws.dao.iface.UserDao;
-import org.stockws.po.CrmUser;
 
 @Repository
-public class UserDaoRedisImpl implements UserDao {
-
-	@Override
-	public CopyOnWriteArrayList<CrmUser> findByUsernameContaining(String term) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void saveUser(CrmUser user) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public CrmUser findByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public class UserDaoRedisImpl  {
 	
 //	@Autowired
 //	private RedisTemplate<String, String> redisTemplate;
