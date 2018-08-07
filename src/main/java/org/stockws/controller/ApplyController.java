@@ -17,9 +17,12 @@ public class ApplyController {
 	@Autowired
 	private ApplyService applyService;
 	
-	@GetMapping("/{country}/{area}/{city}")
-	public List<Apply> getALLApply(@PathVariable(required=false) String country, @PathVariable(required=false) String area, @PathVariable(required=false) String city){
-		return applyService.query(country, area, city);
+	@GetMapping("/area/{area}/country/{country}/province/{province}/city/{city}")
+	public List<Apply> getALLApply(@PathVariable(required=false) String area, 
+			@PathVariable(required=false) String country, 
+			@PathVariable(required=false) String province, 
+			@PathVariable(required=false) String city){
+		return applyService.query(area, country, province, city);
 	}
 	
 	

@@ -19,7 +19,7 @@ logging:
 ########### security ###########
 security:
   storeType: JKS
-  trustStore: clientTrust.jks
+  trustStore: jks/clientTrust.jks
   storepass: clientTrust
   trustKeyAlias: rsaauthKey
   sigAlg: SHA256withRSA

@@ -45,7 +45,7 @@ upload:
 ############ spring ############ 
 spring:
   profiles:
-    active: dev, noEureka
+    active: dev
   resources:
     chain:
       cache: false

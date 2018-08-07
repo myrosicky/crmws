@@ -84,10 +84,10 @@ public class UnderGateWayWebSecurityContext extends WebSecurityConfigurerAdapter
 				// session creation to be allowed (it's disabled by default in 2.0.6)
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 			.and()
-				.requestMatchers().antMatchers("/menus**", "/oauth/users/**", "/oauth/clients/**","/me")
+				.requestMatchers().antMatchers("/menus/**", "/applys/**", "/oauth/users/**", "/oauth/clients/**","/me")
 			.and()
 				.authorizeRequests()
-					.antMatchers("/menus/**").access("#oauth.clientHasRole('ROLE_CLIENT') and hasAnyRole('API_USER')")
+					.antMatchers("/menus/**", "/applys/**").access("hasAnyRole('ROLE_API_USER')")
 					;
 			// @formatter:on
 		}

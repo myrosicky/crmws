@@ -73,6 +73,8 @@ public class JpaContext {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
 //		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
+		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		
 
 		emf.setJpaProperties(properties);
 		emf.afterPropertiesSet();
