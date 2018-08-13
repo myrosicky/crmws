@@ -1,14 +1,14 @@
-package org.stockws.service;
+package org.stockws.service.impl;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.business.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.stockws.dao.UserDao;
-import org.stockws.model.CrmUser;
-import org.stockws.service.iface.UserOpsService;
+import org.stockws.service.UserOpsService;
 import org.stockws.util.CipherUtil;
 
 import com.google.common.base.Optional;
@@ -25,7 +25,7 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 * @see service.UserOpsService#findByUsername(java.lang.String)
 	 */
 	@Override
-	public CrmUser findByUsername(String username) {
+	public User findByUsername(String username) {
 		return userDao.findByUsername(username);
 	}
 
@@ -33,7 +33,7 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 * @see service.UserOpsService#saveUser(po.CrmUser)
 	 */
 	@Override
-	public void saveUser(CrmUser user) {
+	public void saveUser(User user) {
 		userDao.save(user);
 	}
 
@@ -41,7 +41,7 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 * @see service.UserOpsService#findByUsernameContaining(java.lang.String)
 	 */
 	@Override
-	public CopyOnWriteArrayList<CrmUser> findByUsernameContaining(String term) {
+	public CopyOnWriteArrayList<User> findByUsernameContaining(String term) {
 		return userDao.findByUsernameContaining(term);
 	}
 
@@ -49,9 +49,9 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 * @see service.UserOpsService#checkUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Optional<CrmUser> checkUser(String username, String password) {
-		CrmUser user = findByUsername(username);
-		return (Optional<CrmUser>) (!CipherUtil.MD5Match(password, user.getPassword())?Optional.absent():Optional.of(user));
+	public Optional<User> checkUser(String username, String password) {
+		User user = findByUsername(username);
+		return (Optional<User>) (!CipherUtil.MD5Match(password, user.getPassword())?Optional.absent():Optional.of(user));
 	}
 
 	/* (non-Javadoc)
@@ -59,7 +59,7 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 */
 	@Override
 	public void saveUser(String username, String password, String remoteHost) {
-		CrmUser user = new CrmUser();
+		User user = new User();
 		user.setUsername(username);
 		user.setPassword(CipherUtil.MD5(password));
 		user.setGeneral_ip(remoteHost);

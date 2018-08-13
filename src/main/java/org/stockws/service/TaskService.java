@@ -1,12 +1,9 @@
-package org.stockws.service.iface;
+package org.stockws.service;
 
 import java.util.List;
 
-
-
-
-import org.stockws.model.Task;
-import org.stockws.model.Dictionary.Status;
+import org.business.models.applysystem.Task;
+import org.business.models.applysystem.Dictionary.Status;
 
 public interface TaskService {
 	

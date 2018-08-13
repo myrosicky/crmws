@@ -1,7 +1,6 @@
 package org.stockws.util;
 
 
-import org.springframework.stereotype.Component;
 
 public class NamingUtil {
 	public static final String userName = "userName";

@@ -2,7 +2,7 @@ package org.stockws.service;
 
 import java.util.List;
 
-import org.stockws.model.Apply;
+import org.business.models.applysystem.Apply;
 
 public interface ApplyService {
 

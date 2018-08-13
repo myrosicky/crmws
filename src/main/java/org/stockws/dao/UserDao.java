@@ -2,13 +2,13 @@ package org.stockws.dao;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.business.models.User;
 import org.springframework.data.repository.CrudRepository;
-import org.stockws.model.CrmUser;
 
-public interface UserDao extends CrudRepository<CrmUser, Long> {
+public interface UserDao extends CrudRepository<User, Long> {
 
-	public abstract CopyOnWriteArrayList<CrmUser> findByUsernameContaining(String term);
+	CopyOnWriteArrayList<User> findByUsernameContaining(String term);
 
-	public abstract CrmUser findByUsername(String username);
+	User findByUsername(String username);
 
 }

@@ -3,9 +3,9 @@ package org.stockws.dao;
 
 import java.util.List;
 
+import org.business.models.applysystem.Task;
+import org.business.models.applysystem.Dictionary.Status;
 import org.springframework.data.repository.CrudRepository;
-import org.stockws.model.Task;
-import org.stockws.model.Dictionary.Status;
 
 public interface TaskDao extends CrudRepository<Task, Long> {
 

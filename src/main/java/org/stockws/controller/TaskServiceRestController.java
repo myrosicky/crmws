@@ -2,12 +2,12 @@ package org.stockws.controller;
 
 import java.util.List;
 
+import org.business.models.applysystem.Task;
+import org.business.models.applysystem.Dictionary.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.stockws.model.Task;
-import org.stockws.model.Dictionary.Status;
-import org.stockws.service.iface.TaskService;
+import org.stockws.service.TaskService;
 
 @RestController
 public class TaskServiceRestController implements TaskService {

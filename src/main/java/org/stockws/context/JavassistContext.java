@@ -1,11 +1,7 @@
 package org.stockws.context;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
-import java.io.IOException;
-
-import javax.annotation.PostConstruct;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -13,9 +9,10 @@ import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtNewMethod;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 
 
 //@Configuration

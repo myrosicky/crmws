@@ -2,30 +2,30 @@ package org.stockws.dao;
 
 import static org.junit.Assert.fail;
 
+import org.business.models.applysystem.Apply;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.stockws.model.Apply;
+import org.stockws.config.TestConfig;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class ApplyDaoTest {
+public class ApplyDaoTest extends TestConfig {
 
 	@Autowired
 	private ApplyDao applyDao;
 	
 	@Test
 	public final void testSave() {
-		Apply apply = new Apply();
-		apply.setCountry("cn");
-		apply.setArea("asia");
-		apply.setCity("gz");
-		apply.setProvince("gd");
-		apply.setIp("127.0.0.1");
-		apply.setNumber("1");
-		apply.setType("1");
+		Apply apply = new Apply()
+			.setCountry("cn")
+			.setArea("asia")
+			.setProvince("gd")
+			.setCity("gz")
+			.setIp("127.0.0.1")
+			.setNumber("1")
+			.setType("1")
+			;
 		applyDao.save(apply);
 	}
 

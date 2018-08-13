@@ -2,13 +2,14 @@ package org.stockws.service.impl;
 
 import java.util.List;
 
+import org.business.models.applysystem.Apply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.stockws.dao.ApplyDao;
-import org.stockws.model.Apply;
 import org.stockws.service.ApplyService;
+import org.stockws.util.TimeUtil;
 
 import com.google.api.client.util.Strings;
 
@@ -31,8 +32,12 @@ public class ApplyServiceImpl implements ApplyService {
 		List<Apply> result = null;
 		if(!Strings.isNullOrEmpty(input.getArea()) ){
 			if(!Strings.isNullOrEmpty(input.getCountry())){
-				if(!Strings.isNullOrEmpty(input.getCity())){
-					result = applyDao.findByAreaAndCountryAndCity(input.getArea(), input.getCountry(), input.getCity());
+				if(!Strings.isNullOrEmpty(input.getProvince())){
+					if(!Strings.isNullOrEmpty(input.getCity())){
+						result = applyDao.findByAreaAndCountryAndProvinceAndCity(input.getArea(), input.getCountry(), input.getCity());
+					}else{
+						result = applyDao.findByAreaAndCountryAndProvince(input.getArea(), input.getCountry(), input.getProvince());
+					}
 				}else{
 					result = applyDao.findByAreaAndCountry(input.getArea(), input.getCountry());
 				}
@@ -49,6 +54,12 @@ public class ApplyServiceImpl implements ApplyService {
 		return result;
 	}
 	
+	public int addApply(Apply apply, String ip){
+		apply.setIp(ip);
+		apply.setTime(TimeUtil.getCurrentTime());
+		applyDao.save(apply);
+		return 1;
+	}
 	
 	
 }

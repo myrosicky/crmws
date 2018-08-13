@@ -1,8 +1,7 @@
 package org.stockws.dao.impl;
 
-import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
 public class UserDaoRedisImpl  {
 	
 //	@Autowired

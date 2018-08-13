@@ -23,6 +23,7 @@
 		<java.home>/usr/lib/java/jdk1.7.0_79/</java.home>
 		<webapp.lib>/home/ll/git/crmws/crmws/src/main/webapp/WEB-INF/lib</webapp.lib>
 		<tomcat.version>7.0.70</tomcat.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<parent>
@@ -209,7 +210,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.ll</groupId>
+			<artifactId>models</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
