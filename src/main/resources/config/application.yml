@@ -10,7 +10,7 @@ redis:
   host: localhost
   port: 6379
   password: 
-  salt: myrosicky@163.com
+  salt: 
 
 ############ solr ############ 
 #solr.host=http://localhost:8983/solr/gettingstarted
@@ -49,4 +49,3 @@ spring:
   resources:
     chain:
       cache: false
-

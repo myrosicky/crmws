@@ -1,12 +1,15 @@
 package org.stockws.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.business.models.applysystem.Apply;
+import org.business.models.applysystem.vo.QueryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.stockws.dao.ApplyDao;
 import org.stockws.service.ApplyService;
 import org.stockws.util.TimeUtil;
@@ -22,27 +25,22 @@ public class ApplyServiceImpl implements ApplyService {
 	private ApplyDao applyDao;
 	
 	@Override
-	public List<Apply> query(String area, String country, String province, String city){
-		Apply input = new Apply();
-		input.setArea(area);
-		input.setCountry(country);
-		input.setProvince(province);
-		input.setCity(city);
-		
+	public List<Apply> query(QueryVO<Apply> queryVo){
+		Apply applu = queryVo.getModel();
 		List<Apply> result = null;
-		if(!Strings.isNullOrEmpty(input.getArea()) ){
-			if(!Strings.isNullOrEmpty(input.getCountry())){
-				if(!Strings.isNullOrEmpty(input.getProvince())){
-					if(!Strings.isNullOrEmpty(input.getCity())){
-						result = applyDao.findByAreaAndCountryAndProvinceAndCity(input.getArea(), input.getCountry(), input.getCity());
+		if(!Strings.isNullOrEmpty(applu.getArea()) ){
+			if(!Strings.isNullOrEmpty(applu.getCountry())){
+				if(!Strings.isNullOrEmpty(applu.getProvince())){
+					if(!Strings.isNullOrEmpty(applu.getCity())){
+						result = applyDao.findByAreaAndCountryAndProvinceAndCity(applu.getArea(), applu.getCountry(), applu.getProvince(), applu.getCity());
 					}else{
-						result = applyDao.findByAreaAndCountryAndProvince(input.getArea(), input.getCountry(), input.getProvince());
+						result = applyDao.findByAreaAndCountryAndProvince(applu.getArea(), applu.getCountry(), applu.getProvince());
 					}
 				}else{
-					result = applyDao.findByAreaAndCountry(input.getArea(), input.getCountry());
+					result = applyDao.findByAreaAndCountry(applu.getArea(), applu.getCountry());
 				}
 			}else{
-				result = applyDao.findByArea(input.getArea());
+				result = applyDao.findByArea(applu.getArea());
 			}
 		}
 		if(log.isDebugEnabled()){
@@ -54,12 +52,25 @@ public class ApplyServiceImpl implements ApplyService {
 		return result;
 	}
 	
-	public int addApply(Apply apply, String ip){
-		apply.setIp(ip);
-		apply.setTime(TimeUtil.getCurrentTime());
+	@Override
+	public int add(Apply apply){
+		Assert.notNull(apply, "apply needed to update should not be null");
+		
+		apply.setCreateTime(new Date());
 		applyDao.save(apply);
 		return 1;
 	}
+
+	@Override
+	public int update(Apply apply) {
+		Assert.notNull(apply, "apply needed to update should not be null");
+		Assert.isTrue(apply.getId() != -1, "no apply id found");
+		
+		apply.setUpdateTime(new Date());
+		applyDao.save(apply);
+		return 1;
+	}
+	
 	
 	
 }

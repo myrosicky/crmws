@@ -11,7 +11,7 @@ public class StartAPITest extends TestConfig{
 	@Test
 	public final void testMain() {
 		try {
-			Thread.sleep(999999l);
+			Thread.sleep(99999999l);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
