@@ -27,7 +27,7 @@ public class ApplyController {
 	@Autowired
 	private ApplyService applyService;
 	
-	@GetMapping("/area/{area}/country/{country}/province/{province}/city/{city}?page={page}&size={size}")
+	@GetMapping("/area/{area}/country/{country}/province/{province}/city/{city}")
 	public List<Apply> getALLApply(
 			@PathVariable(required=false) String area, 
 			@PathVariable(required=false) String country, 

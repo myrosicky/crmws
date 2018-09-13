@@ -8,11 +8,13 @@ import org.business.models.applysystem.vo.QueryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.stockws.dao.ApplyDao;
 import org.stockws.service.ApplyService;
-import org.stockws.util.TimeUtil;
 
 import com.google.api.client.util.Strings;
 
@@ -24,23 +26,36 @@ public class ApplyServiceImpl implements ApplyService {
 	@Autowired
 	private ApplyDao applyDao;
 	
+	@Value("${custom.datasource.defaultSize}")
+	private Integer defaultSize;
+	
 	@Override
 	public List<Apply> query(QueryVO<Apply> queryVo){
-		Apply applu = queryVo.getModel();
+		Apply apply = queryVo.getModel();
 		List<Apply> result = null;
-		if(!Strings.isNullOrEmpty(applu.getArea()) ){
-			if(!Strings.isNullOrEmpty(applu.getCountry())){
-				if(!Strings.isNullOrEmpty(applu.getProvince())){
-					if(!Strings.isNullOrEmpty(applu.getCity())){
-						result = applyDao.findByAreaAndCountryAndProvinceAndCity(applu.getArea(), applu.getCountry(), applu.getProvince(), applu.getCity());
+		int page = 1;
+		if(queryVo.getPage() != null && queryVo.getPage() > 0){
+			page = queryVo.getPage();
+		}
+		int size = defaultSize;
+		if(queryVo.getSize() != null && queryVo.getSize() > 0){
+			size = queryVo.getSize();
+		}
+		
+		PageRequest pageReq = new PageRequest(page, size, Sort.Direction.ASC, "createTime");
+		if(!Strings.isNullOrEmpty(apply.getArea()) ){
+			if(!Strings.isNullOrEmpty(apply.getCountry())){
+				if(!Strings.isNullOrEmpty(apply.getProvince())){
+					if(!Strings.isNullOrEmpty(apply.getCity())){
+						result = applyDao.findByAreaAndCountryAndProvinceAndCity(apply.getArea(), apply.getCountry(), apply.getProvince(), apply.getCity(), pageReq);
 					}else{
-						result = applyDao.findByAreaAndCountryAndProvince(applu.getArea(), applu.getCountry(), applu.getProvince());
+						result = applyDao.findByAreaAndCountryAndProvince(apply.getArea(), apply.getCountry(), apply.getProvince(), pageReq);
 					}
 				}else{
-					result = applyDao.findByAreaAndCountry(applu.getArea(), applu.getCountry());
+					result = applyDao.findByAreaAndCountry(apply.getArea(), apply.getCountry(), pageReq);
 				}
 			}else{
-				result = applyDao.findByArea(applu.getArea());
+				result = applyDao.findByArea(apply.getArea(), pageReq);
 			}
 		}
 		if(log.isDebugEnabled()){

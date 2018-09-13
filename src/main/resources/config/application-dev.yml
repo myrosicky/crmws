@@ -39,3 +39,4 @@ spring:
 custom:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
+    defaultSize: 10
