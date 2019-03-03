@@ -1,4 +1,4 @@
-package org.stockws.context;
+package org.stockws.config;
 
 
 import java.util.Properties;
@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +19,12 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class JpaContext {
+public class DataAccessContext {
 
 	private @Resource Environment env;
+	
+	@Autowired
+	private DataSource dataSource;
 
 	@Value("${custom.datasource.driverClassName}")
 	private String driverClassName;
@@ -35,22 +38,21 @@ public class JpaContext {
 	@Value("${spring.datasource.password}")
 	private String password;
 	
+	@Value("${spring.datasource2.url}")
+	private String url2;
+
+	@Value("${spring.datasource2.username}")
+	private String username2;
+
+	@Value("${spring.datasource2.password}")
+	private String password2;
+	
 	@Value("${spring.jpa.hibernate.ddl-auto}")
 	private String ddlAuto;
 	
 	@Value("${spring.jpa.hibernate.packageToScan}")
 	private String packageToScan;
 
-	@Bean
-	public DataSource dataSource() {
-		BasicDataSource basicDataSource = new BasicDataSource();
-		basicDataSource.setDriverClassName(driverClassName);
-		basicDataSource.setUrl(url);
-		basicDataSource.setUsername(username);
-		basicDataSource.setPassword(password);
-		return basicDataSource;
-	}
-	
 	@Bean
 	HibernateJpaVendorAdapter hibernateJpaVendorAdapter(){
 		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -62,7 +64,7 @@ public class JpaContext {
 	@Bean
 	public EntityManagerFactory entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setDataSource(dataSource());
+		emf.setDataSource(dataSource);
 		emf.setPackagesToScan(packageToScan);
 		emf.setJpaVendorAdapter(hibernateJpaVendorAdapter());
 
@@ -70,8 +72,9 @@ public class JpaContext {
 		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
 //		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+//		properties.setProperty("hibernate.physical_naming_strategy", "org.stockws.context.DevPhysicalNamingStrategyImpl");
+		properties.setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
 		
-
 		emf.setJpaProperties(properties);
 		emf.afterPropertiesSet();
 		return emf.getObject();
@@ -84,6 +87,45 @@ public class JpaContext {
 		txManager.setEntityManagerFactory(entityManagerFactory());
 		return txManager;
 	}
+	
+	/*
+	@Bean
+	public DataSource dataSource2() {
+		BasicDataSource basicDataSource = new BasicDataSource();
+		basicDataSource.setDriverClassName(driverClassName);
+		basicDataSource.setUrl(url2);
+		basicDataSource.setUsername(username2);
+		basicDataSource.setPassword(password2);
+		return basicDataSource;
+	}
+	
+	@Bean
+	public EntityManagerFactory entityManagerFactory2() {
+		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+		emf.setDataSource(dataSource2());
+		emf.setPackagesToScan(packageToScan);
+		emf.setJpaVendorAdapter(hibernateJpaVendorAdapter());
+
+		Properties properties = new Properties();
+		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
+//		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
+		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+//		properties.setProperty("hibernate.physical_naming_strategy", "org.stockws.context.ArchivePhysicalNamingStrategyImpl");
+
+		emf.setJpaProperties(properties);
+		emf.afterPropertiesSet();
+		EntityManagerFactory result = emf.getObject();
+		return result;
+	}
+	
+	@Bean
+	public PlatformTransactionManager transactionManager2() {
+
+		JpaTransactionManager txManager = new JpaTransactionManager();
+		txManager.setEntityManagerFactory(entityManagerFactory2());
+		return txManager;
+	}
+	*/
 
 	@Bean
 	public HibernateExceptionTranslator hibernateExceptionTranslator() {

@@ -1,4 +1,4 @@
-package org.stockws.context;
+package org.stockws.config;
 /*
  * Copyright 2002-2012 the original author or authors.
  *

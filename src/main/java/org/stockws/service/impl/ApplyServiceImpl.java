@@ -30,7 +30,14 @@ public class ApplyServiceImpl implements ApplyService {
 	private Integer defaultSize;
 	
 	@Override
+	public List<Apply> queryMulti(QueryVO<List<Apply>> queryVo){
+		log.debug("into queryMulti");
+		return null;
+	}
+	
+	@Override
 	public List<Apply> query(QueryVO<Apply> queryVo){
+		log.debug("into query");
 		Apply apply = queryVo.getModel();
 		List<Apply> result = null;
 		int page = 1;

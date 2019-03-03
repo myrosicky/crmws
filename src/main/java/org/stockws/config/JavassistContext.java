@@ -1,4 +1,4 @@
-package org.stockws.context;
+package org.stockws.config;
 
 import java.io.File;
 import java.io.FilenameFilter;

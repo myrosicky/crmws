@@ -1,4 +1,4 @@
-package org.stockws.context;
+package org.stockws.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

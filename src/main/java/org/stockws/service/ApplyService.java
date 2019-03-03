@@ -13,4 +13,6 @@ public interface ApplyService {
 	
 	public int update(Apply apply);
 
+	List<Apply> queryMulti(QueryVO<List<Apply>> queryVo);
+
 }

@@ -2,9 +2,13 @@ package org.stockws.dao;
 
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.business.models.applysystem.Apply;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.stockws.config.TestConfig;
@@ -12,6 +16,8 @@ import org.stockws.config.TestConfig;
 @RunWith(SpringRunner.class)
 public class ApplyDaoTest extends TestConfig {
 
+	private static final Logger log = LoggerFactory.getLogger(ApplyDaoTest.class);
+	
 	@Autowired
 	private ApplyDao applyDao;
 	
@@ -31,12 +37,16 @@ public class ApplyDaoTest extends TestConfig {
 
 	@Test
 	public final void testFindByCountry() {
-		fail("Not yet implemented"); // TODO
+		
 	}
 
 	@Test
 	public final void testFindByCountryAndArea() {
-		fail("Not yet implemented"); // TODO
+		List<Apply> applys = applyDao.findAll();
+		log.debug("applys:" + applys);
+		if(applys != null){
+			log.debug("applys.size():" + applys.size());
+		}
 	}
 
 	@Test
@@ -46,7 +56,7 @@ public class ApplyDaoTest extends TestConfig {
 
 	@Test
 	public final void testCountApplysById() {
-		fail("Not yet implemented"); // TODO
+		
 	}
 
 	

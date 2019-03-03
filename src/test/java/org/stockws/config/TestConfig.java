@@ -9,9 +9,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
 		webEnvironment=WebEnvironment.DEFINED_PORT,
+		classes = {TestEmbeddTomcatConfig.class},
 		properties={
 				"eureka.client.register-with-eureka=false",
 				"eureka.client.fetch-registry=false"
+				
 })
 public class TestConfig {
 

@@ -1,5 +1,6 @@
 package org.stockws.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,20 @@ public class ApplyController {
 	
 	@Autowired
 	private ApplyService applyService;
+	
+	@GetMapping("")
+	public List<Apply> getALLApplyByIds(@RequestParam("ids") List<Long> ids){
+		List<Apply> applys = new ArrayList<>(ids.size());
+		for(Long id : ids){
+			Apply tmp = new Apply();
+			tmp.setId(id);
+			applys.add(tmp);
+		}
+		QueryVO<List<Apply>> queryVo = new QueryVO<>();
+		queryVo.setModel(applys);
+		return applyService.queryMulti(queryVo);
+	}
+			
 	
 	@GetMapping("/area/{area}/country/{country}/province/{province}/city/{city}")
 	public List<Apply> getALLApply(
