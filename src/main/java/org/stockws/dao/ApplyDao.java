@@ -16,6 +16,5 @@ public interface ApplyDao extends JpaRepository<Apply, Long> {
 	public List<Apply> findByAreaAndCountryAndProvince(String area,String country, String province, Pageable pageable);
 	public List<Apply> findByAreaAndCountryAndProvinceAndCity(String area, String country, String province, String city, Pageable pageable);
 	
-	@Query("SELECT count(p) as tag_count from Apply p WHERE p.id = :id ")
-    List<Object[]> countApplysById(@Param("id") Long id);
+    long countById(Long id);
 }

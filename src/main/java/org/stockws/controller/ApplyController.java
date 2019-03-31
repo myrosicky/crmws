@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.business.models.applysystem.Apply;
+import org.business.models.applysystem.Approve;
 import org.business.models.applysystem.vo.QueryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,6 @@ public class ApplyController {
 		return applyService.queryMulti(queryVo);
 	}
 			
-	
 	@GetMapping("/area/{area}/country/{country}/province/{province}/city/{city}")
 	public List<Apply> getALLApply(
 			@PathVariable(required=false) String area, 
@@ -85,6 +85,23 @@ public class ApplyController {
 		}
 		return applyService.update(apply);
 	}
+	
+	@PostMapping
+	public int postApprove(@RequestBody Approve approve){
+		return applyService.approve(approve);
+	}
+	
+	@PostMapping
+	public int postReview(@RequestBody Approve approve){
+		return applyService.review(approve);
+	}
+	
+	@PostMapping
+	public int postReturnBack(@RequestBody Approve approve){
+		return applyService.returnBack(approve);
+	}
+	
+	
 	
 	
 }

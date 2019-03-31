@@ -23,15 +23,14 @@ public class ApplyDaoTest extends TestConfig {
 	
 	@Test
 	public final void testSave() {
-		Apply apply = new Apply()
-			.setCountry("cn")
-			.setArea("asia")
-			.setProvince("gd")
-			.setCity("gz")
-			.setIp("127.0.0.1")
-			.setNumber("1")
-			.setType("1")
-			;
+		Apply apply = new Apply();
+		apply.setCountry("cn");
+		apply.setArea("asia");
+		apply.setProvince("gd");
+		apply.setCity("gz");
+		apply.setIp("127.0.0.1");
+		apply.setNumber("1");
+		apply.setType("1");
 		applyDao.save(apply);
 	}
 
