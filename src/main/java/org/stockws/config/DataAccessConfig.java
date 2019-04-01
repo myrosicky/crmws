@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class DataAccessContext {
+public class DataAccessConfig {
 
 	private @Resource Environment env;
 	
@@ -70,7 +71,6 @@ public class DataAccessContext {
 
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
-//		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 //		properties.setProperty("hibernate.physical_naming_strategy", "org.stockws.context.DevPhysicalNamingStrategyImpl");
 		properties.setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
@@ -88,7 +88,6 @@ public class DataAccessContext {
 		return txManager;
 	}
 	
-	/*
 	@Bean
 	public DataSource dataSource2() {
 		BasicDataSource basicDataSource = new BasicDataSource();
@@ -125,7 +124,7 @@ public class DataAccessContext {
 		txManager.setEntityManagerFactory(entityManagerFactory2());
 		return txManager;
 	}
-	*/
+	
 
 	@Bean
 	public HibernateExceptionTranslator hibernateExceptionTranslator() {

@@ -1,4 +1,4 @@
-package org.stockws.service.impl;
+package org.stockws.service;
 
 import org.business.models.applysystem.flow.ApplyFlow;
 

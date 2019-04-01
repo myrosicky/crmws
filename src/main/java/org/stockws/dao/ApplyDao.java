@@ -16,5 +16,8 @@ public interface ApplyDao extends JpaRepository<Apply, Long> {
 	public List<Apply> findByAreaAndCountryAndProvince(String area,String country, String province, Pageable pageable);
 	public List<Apply> findByAreaAndCountryAndProvinceAndCity(String area, String country, String province, String city, Pageable pageable);
 	
+	@Query("select a.createTime, count(*) from Apply a where a.createTime > :createTimeBgin and a.createTime < :createTimeEnd and a.deleted=:deleted")
+	long countByCreateTimeLikeAndDeleted(@Param("createTimeBgin") String createTimeBgin, @Param("createTimeEnd") String createTimeEnd, @Param("deleted") String deleted);
+	
     long countById(Long id);
 }

@@ -24,6 +24,7 @@ import org.stockws.dao.ApplyDao;
 import org.stockws.dao.ApproveDao;
 import org.stockws.dao.FlowDao;
 import org.stockws.service.ApplyService;
+import org.stockws.service.FlowService;
 import org.stockws.util.TimeUtil;
 
 import com.google.api.client.util.Strings;
@@ -96,7 +97,7 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int add(Apply apply){
 		
-		apply.setCreateTime(new Date());
+		apply.setCreateTime(TimeUtil.getCurrentTime());
 		applyDao.save(apply);
 		return 1;
 	}
@@ -110,7 +111,7 @@ public class ApplyServiceImpl implements ApplyService {
 			throw new AppException("2");
 		}
 		
-		apply.setUpdateTime(new Date());
+		apply.setUpdateTime(TimeUtil.getCurrentTime());
 		applyDao.save(apply);
 		return 1;
 	}
@@ -125,7 +126,7 @@ public class ApplyServiceImpl implements ApplyService {
 		}
 		
 		apply.setDeleted("1");
-		apply.setUpdateTime(new Date());
+		apply.setUpdateTime(TimeUtil.getCurrentTime());
 		applyDao.save(apply);
 		return 1;
 	}

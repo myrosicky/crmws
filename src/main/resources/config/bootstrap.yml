@@ -3,4 +3,6 @@ spring:
     config:
       uri: ${CONFIG_SERVER_URL:http://localhost:8888}
   application:
-   name: api
+    name: api
+  profiles:
+    active: api_dev, api_error, api_cert
