@@ -11,9 +11,6 @@ public interface ApplyService {
 
 	public List<Apply> query(QueryVO<Apply> queryVo) throws AppException;
 	
-	public int add(Apply apply) throws AppException;
-	
-	public int update(Apply apply) throws AppException;
 
 	public List<Apply> queryMulti(QueryVO<List<Apply>> queryVo) throws AppException;
 
@@ -24,6 +21,8 @@ public interface ApplyService {
 	public int review(Approve apply) throws AppException;
 	
 	public int returnBack(Approve apply) throws AppException;
+
+	int save(Apply apply, String ip, String userID) throws AppException;
 	
 	
 

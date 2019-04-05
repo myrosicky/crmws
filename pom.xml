@@ -7,7 +7,7 @@
 	<name>crmws</name>
 	<groupId>org.ll</groupId>
 	<artifactId>crmws</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 
 	<properties>
 		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>

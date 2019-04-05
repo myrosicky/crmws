@@ -1,13 +1,13 @@
 package org.stockws.service.impl;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.business.exceptions.AppException;
+import org.business.exceptions.ApplyNotFoundException;
+import org.business.exceptions.BusinessCheckingException;
+import org.business.exceptions.IllegalOperationException;
 import org.business.models.applysystem.Apply;
 import org.business.models.applysystem.Approve;
 import org.business.models.applysystem.flow.ApplyFlow;
@@ -19,13 +19,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.stockws.dao.ApplyDao;
 import org.stockws.dao.ApproveDao;
 import org.stockws.dao.FlowDao;
 import org.stockws.service.ApplyService;
 import org.stockws.service.FlowService;
 import org.stockws.util.TimeUtil;
+
+import redis.clients.jedis.Jedis;
 
 import com.google.api.client.util.Strings;
 
@@ -48,6 +49,9 @@ public class ApplyServiceImpl implements ApplyService {
 	
 	@Autowired
 	private FlowDao flowDao;
+	
+	@Autowired
+	private Jedis jedis;
 	
 	@Override
 	public List<Apply> queryMulti(QueryVO<List<Apply>> queryVo){
@@ -94,49 +98,92 @@ public class ApplyServiceImpl implements ApplyService {
 		return result;
 	}
 	
-	@Override
-	public int add(Apply apply){
+	public int submitForApprove(Apply apply){
+		long applyID = apply.getId();
+		jedis.setnx("submitForApprove." + applyID, "1");
+		log.info("submit [" + applyID + "] for approval start");
+		if(!applyDao.exists(applyID)){
+			throw new ApplyNotFoundException();
+		}
 		
-		apply.setCreateTime(TimeUtil.getCurrentTime());
-		applyDao.save(apply);
+		if(flowDao.countByApplyIDAndStepIn(applyID, Arrays.asList(ApplyFlow.STEP_PEND_APPROVE)) > 0){
+			throw new IllegalOperationException();
+		}
+		
+		ApplyFlow flow = new ApplyFlow();
+		flow.setApplyID(applyID);
+		flow.setStep(ApplyFlow.STEP_PEND_APPROVE);
+		flow.setTime(TimeUtil.getCurrentTime());
+		flowDao.save(flow);
+		
+		log.info("submit [" + applyID + "] for approval done");
+		jedis.del("submitForApprove." + applyID);
 		return 1;
 	}
-
+	
 	@Override
-	public int update(Apply apply) {
-		if(!applyDao.exists(apply.getId())){
-			throw new AppException("1");
+	public int save(Apply apply, String ip, String userID) {
+		long applyID = apply.getId();
+		boolean applyIDExists =  StringUtils.isNotBlank(String.valueOf(applyID));
+		log.info("save apply[id:" + applyID + "] start");
+		if(applyIDExists){
+			jedis.setnx("submitForApprove." + applyID, "1");
 		}
+		// checking for update
+		if(applyIDExists && !applyDao.exists(applyID)){
+			throw new ApplyNotFoundException();
+		}
+		
 		if(pending(apply)){
 			throw new AppException("2");
 		}
 		
+		if(StringUtils.isBlank(apply.getArea()) 
+				||  StringUtils.isBlank(apply.getCity())
+				||  StringUtils.isBlank(apply.getCountry())
+				||  StringUtils.isBlank(apply.getImage())
+				||  StringUtils.isBlank(apply.getName())
+				||  StringUtils.isBlank(apply.getNumber())
+				){
+			throw new BusinessCheckingException("");
+		}
+			
+		
+		if(!applyIDExists){
+			apply.setCreateBy(userID);
+			apply.setCreateTime(TimeUtil.getCurrentTime());
+		}
+		apply.setIp(ip);
+		apply.setUpdateBy(userID);
 		apply.setUpdateTime(TimeUtil.getCurrentTime());
+		apply.setDeleted(Apply.DELETED_FALSE);
 		applyDao.save(apply);
+		log.info("save apply[id:" + apply.getId() + "] done");
+		if(applyIDExists){
+			jedis.del("submitForApprove." + applyID);
+		}
 		return 1;
 	}
 	
 	@Override
 	public int delete(Apply apply) {
 		if(!applyDao.exists(apply.getId())){
-			throw new AppException("1");
+			throw new ApplyNotFoundException();
 		}
 		if(pending(apply)){
 			throw new AppException("2");
 		}
 		
-		apply.setDeleted("1");
+		apply.setDeleted(Apply.DELETED_TRUE);
 		apply.setUpdateTime(TimeUtil.getCurrentTime());
 		applyDao.save(apply);
 		return 1;
 	}
 	
 	private boolean pending(Apply apply){
-		if(flowDao.countByApplyIDAndStepIn(apply.getId(), Arrays.asList(ApplyFlow.STEP_PEND_ACCEPT, ApplyFlow.STEP_PEND_APPROVE, ApplyFlow.STEP_PEND_REVIEW))
-				> 0){
-			return true;
-		}
-		return false;
+		return flowDao.countByApplyIDAndStepIn(apply.getId(), 
+					Arrays.asList(ApplyFlow.STEP_PEND_ACCEPT, ApplyFlow.STEP_PEND_APPROVE, ApplyFlow.STEP_PEND_REVIEW))
+				> 0;
 	}
 	
 	@Override
@@ -144,7 +191,7 @@ public class ApplyServiceImpl implements ApplyService {
 		
 		// checking
 		if(!applyDao.exists(approve.getApplyID())){
-			throw new AppException("1");
+			throw new ApplyNotFoundException();
 		}
 		
 		if(approve.getId() != 0l && !approveDao.exists(approve.getId())) {
@@ -172,7 +219,7 @@ public class ApplyServiceImpl implements ApplyService {
 	public int review(Approve approve) throws AppException {
 		// checking
 		if(!applyDao.exists(approve.getApplyID())){
-			throw new AppException("1");
+			throw  new ApplyNotFoundException();
 		}
 		
 		if(approve.getId() != 0l && !approveDao.exists(approve.getId())) {
@@ -200,7 +247,7 @@ public class ApplyServiceImpl implements ApplyService {
 	public int returnBack(Approve approve) throws AppException {
 		// checking
 		if(!applyDao.exists(approve.getApplyID())){
-			throw new AppException("1");
+			throw  new ApplyNotFoundException();
 		}
 		
 		if(approve.getId() != 0l && !approveDao.exists(approve.getId())) {

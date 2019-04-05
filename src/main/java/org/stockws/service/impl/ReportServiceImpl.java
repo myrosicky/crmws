@@ -19,12 +19,10 @@ public class ReportServiceImpl {
 	
 	
 	public MthApplyRpt[] summaryMonthApply(String startMonth, String endMonth){
-		List<MthApplyRpt> result = null;
-		 
-		for(){
-			applyDao.countByCreateTimeLikeAndDeleted();
+		List<MthApplyRpt> result = applyDao.monthCntByCreateTimeLikeAndDeleted(startMonth, endMonth, 0);
+		if(log.isDebugEnabled()){
+			log.debug("result.size():" + result.size());
 		}
-		
 		return result.toArray(new MthApplyRpt[result.size()]);
 	}
 	

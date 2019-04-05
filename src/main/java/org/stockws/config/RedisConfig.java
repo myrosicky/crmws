@@ -11,14 +11,16 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import redis.clients.jedis.Jedis;
 
 @Configuration
-public class RedisContext {
+public class RedisConfig {
 	
-	private final static Logger log = LoggerFactory.getLogger(RedisContext.class);
+	private final static Logger log = LoggerFactory.getLogger(RedisConfig.class);
 	
 	private @Value("${redis.host}") String host;
 	private @Value("${redis.port}") String port;
 	private @Value("${redis.password}") String password;
 	private @Value("${redis.salt}") String salt;
+	private @Value("${redis.timeout}") int timeout;
+	
 
 //	@Bean
 //	public JedisConnectionFactory jedisConnectionFactory() {
@@ -59,7 +61,7 @@ public class RedisContext {
 	@Bean
 	public Jedis jedis() {
 		log.info("redis server [host:"+host+",port:"+port+"]");
-		Jedis jedis = new Jedis(host, Integer.parseInt(port), 500);
+		Jedis jedis = new Jedis(host, Integer.parseInt(port), timeout);
 	    jedis.connect();
 	    jedis.auth(new Md5PasswordEncoder().encodePassword(password, salt));
 		return jedis;
