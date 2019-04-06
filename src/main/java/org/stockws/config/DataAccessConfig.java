@@ -62,34 +62,34 @@ public class DataAccessConfig {
 		return hibernateJpaVendorAdapter;
 	}
 	
-	@Bean
-	public EntityManagerFactory entityManagerFactory() {
-		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setDataSource(dataSource);
-		emf.setPackagesToScan(packageToScan);
-		emf.setJpaVendorAdapter(hibernateJpaVendorAdapter());
-
-		Properties properties = new Properties();
-		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
-		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-//		properties.setProperty("hibernate.physical_naming_strategy", "org.stockws.context.DevPhysicalNamingStrategyImpl");
-		properties.setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
-		
-		emf.setJpaProperties(properties);
-		emf.afterPropertiesSet();
-		return emf.getObject();
-	}
-
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-
-		JpaTransactionManager txManager = new JpaTransactionManager();
-		txManager.setEntityManagerFactory(entityManagerFactory());
-		return txManager;
-	}
+//	@Bean
+//	public EntityManagerFactory entityManagerFactory() {
+//		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+//		emf.setDataSource(dataSource);
+//		emf.setPackagesToScan(packageToScan);
+//		emf.setJpaVendorAdapter(hibernateJpaVendorAdapter());
+//
+//		Properties properties = new Properties();
+//		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
+//		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+////		properties.setProperty("hibernate.physical_naming_strategy", "org.stockws.context.DevPhysicalNamingStrategyImpl");
+//		properties.setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
+//		
+//		emf.setJpaProperties(properties);
+//		emf.afterPropertiesSet();
+//		return emf.getObject();
+//	}
+//
+//	@Bean
+//	public PlatformTransactionManager transactionManager() {
+//
+//		JpaTransactionManager txManager = new JpaTransactionManager();
+//		txManager.setEntityManagerFactory(entityManagerFactory());
+//		return txManager;
+//	}
 	
 	@Bean
-	public DataSource dataSource2() {
+	public DataSource dataSource() {
 		BasicDataSource basicDataSource = new BasicDataSource();
 		basicDataSource.setDriverClassName(driverClassName);
 		basicDataSource.setUrl(url2);
@@ -99,9 +99,9 @@ public class DataAccessConfig {
 	}
 	
 	@Bean
-	public EntityManagerFactory entityManagerFactory2() {
+	public EntityManagerFactory entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setDataSource(dataSource2());
+		emf.setDataSource(dataSource());
 		emf.setPackagesToScan(packageToScan);
 		emf.setJpaVendorAdapter(hibernateJpaVendorAdapter());
 
@@ -118,10 +118,10 @@ public class DataAccessConfig {
 	}
 	
 	@Bean
-	public PlatformTransactionManager transactionManager2() {
+	public PlatformTransactionManager transactionManager() {
 
 		JpaTransactionManager txManager = new JpaTransactionManager();
-		txManager.setEntityManagerFactory(entityManagerFactory2());
+		txManager.setEntityManagerFactory(entityManagerFactory());
 		return txManager;
 	}
 	

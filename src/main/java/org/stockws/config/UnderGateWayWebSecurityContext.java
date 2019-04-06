@@ -85,7 +85,7 @@ public class UnderGateWayWebSecurityContext extends WebSecurityConfigurerAdapter
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 				.authorizeRequests()
-					.antMatchers("/menus/**", "/applys/**").access("hasAnyRole('ROLE_API_USER')")
+					.antMatchers("/menus/**", "/applys/**", "/me/**").access("hasAnyRole('ROLE_API_USER')")
 					;
 			// @formatter:on
 		}

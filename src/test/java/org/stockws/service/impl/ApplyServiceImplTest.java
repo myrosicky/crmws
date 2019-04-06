@@ -36,12 +36,16 @@ public class ApplyServiceImplTest extends TestConfig {
 		log.debug("[testSave start]");
 		Apply apply = new Apply();
 		Apply[] p0s = {apply};
+		String[] p1s = {"192.168.1.1"};
+		String[] p2s = {"1"};
 		for(Apply p0 : p0s){
+		for(String p1 : p1s){
+		for(String p2 : p2s){
 			log.debug("----------------------");
-			log.debug(p0 + "");
-			int result = applyService.save(apply);
+			log.debug(p0 + ", " + p1 + ", " + p2);
+			int result = applyService.save(p0, p1, p2);
 			log.debug("result:" + result);
-		}
+		}}}
 		log.debug("[testSave end]");
 	}
 

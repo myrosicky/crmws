@@ -1,7 +1,10 @@
 package org.stockws.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.business.models.applysystem.Apply;
@@ -70,33 +73,36 @@ public class ApplyController {
 		return applyService.query(queryVo);
 	}
 	
-	@PutMapping
-	public int putApply(@RequestBody Apply apply){
+	@PutMapping("/apply")
+	public int putApply(@RequestBody Apply apply, HttpServletRequest req, Principal principal){
 		if(log.isDebugEnabled()){
 			log.debug("apply:" + apply);
 		}
-		return applyService.add(apply);
+		
+		String userID = null;
+		return applyService.save(apply, req.getRemoteAddr(), userID);
 	}
 	
-	@PostMapping
-	public int postApply(@RequestBody Apply apply){
+	@PostMapping("/apply")
+	public int postApply(@RequestBody Apply apply, HttpServletRequest req, Principal principal){
 		if(log.isDebugEnabled()){
 			log.debug("apply:" + apply);
 		}
-		return applyService.update(apply);
+		String userID = null;
+		return applyService.save(apply, req.getRemoteAddr(), userID);
 	}
 	
-	@PostMapping
+	@PostMapping("/approve")
 	public int postApprove(@RequestBody Approve approve){
 		return applyService.approve(approve);
 	}
 	
-	@PostMapping
+	@PostMapping("/review")
 	public int postReview(@RequestBody Approve approve){
 		return applyService.review(approve);
 	}
 	
-	@PostMapping
+	@PostMapping("/return")
 	public int postReturnBack(@RequestBody Approve approve){
 		return applyService.returnBack(approve);
 	}

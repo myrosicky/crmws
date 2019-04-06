@@ -19,7 +19,7 @@
 		<cas-client.version>3.4.1</cas-client.version>
 		<CATALINA.HOME>/usr/apache-tomcat-7.0.70</CATALINA.HOME>
 		<java.home>/usr/lib/java/jdk1.7.0_79/</java.home>
-		<webapp.lib>/home/ll/git/crmws/crmws/src/main/webapp/WEB-INF/lib</webapp.lib>
+		<webapp.lib>/home/ll/workspace/crmws/src/main/webapp/WEB-INF/lib</webapp.lib>
 		<tomcat.version>7.0.70</tomcat.version>
 		<java.version>1.8</java.version>
 	</properties>
@@ -116,7 +116,7 @@
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>2.6.2</version>
+			<version>2.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
