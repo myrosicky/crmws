@@ -10,6 +10,7 @@ import org.business.exceptions.BusinessCheckingException;
 import org.business.exceptions.IllegalOperationException;
 import org.business.models.applysystem.Apply;
 import org.business.models.applysystem.Approve;
+import org.business.models.applysystem.Dictionary;
 import org.business.models.applysystem.flow.ApplyFlow;
 import org.business.models.applysystem.vo.QueryVO;
 import org.slf4j.Logger;
@@ -27,8 +28,6 @@ import org.stockws.service.FlowService;
 import org.stockws.util.TimeUtil;
 
 import redis.clients.jedis.Jedis;
-
-import com.google.api.client.util.Strings;
 
 @Service
 public class ApplyServiceImpl implements ApplyService {
@@ -74,10 +73,10 @@ public class ApplyServiceImpl implements ApplyService {
 		}
 		
 		PageRequest pageReq = new PageRequest(page, size, Sort.Direction.ASC, "createTime");
-		if(!Strings.isNullOrEmpty(apply.getArea()) ){
-			if(!Strings.isNullOrEmpty(apply.getCountry())){
-				if(!Strings.isNullOrEmpty(apply.getProvince())){
-					if(!Strings.isNullOrEmpty(apply.getCity())){
+		if(StringUtils.isNotBlank(apply.getArea()) ){
+			if(StringUtils.isNotBlank(apply.getCountry())){
+				if(StringUtils.isNotBlank(apply.getProvince())){
+					if(StringUtils.isNotBlank(apply.getCity())){
 						result = applyDao.findByAreaAndCountryAndProvinceAndCity(apply.getArea(), apply.getCountry(), apply.getProvince(), apply.getCity(), pageReq);
 					}else{
 						result = applyDao.findByAreaAndCountryAndProvince(apply.getArea(), apply.getCountry(), apply.getProvince(), pageReq);
@@ -102,17 +101,17 @@ public class ApplyServiceImpl implements ApplyService {
 		long applyID = apply.getId();
 		jedis.setnx("submitForApprove." + applyID, "1");
 		log.info("submit [" + applyID + "] for approval start");
-		if(!applyDao.exists(applyID)){
+		if(!applyDao.existsById(applyID)){
 			throw new ApplyNotFoundException();
 		}
 		
-		if(flowDao.countByApplyIDAndStepIn(applyID, Arrays.asList(ApplyFlow.STEP_PEND_APPROVE)) > 0){
+		if(flowDao.countByApplyIDAndStepIn(applyID, Arrays.asList(Dictionary.FlowStep.PEND_APPROVE.toString())) > 0){
 			throw new IllegalOperationException();
 		}
 		
 		ApplyFlow flow = new ApplyFlow();
 		flow.setApplyID(applyID);
-		flow.setStep(ApplyFlow.STEP_PEND_APPROVE);
+		flow.setStep(Dictionary.FlowStep.PEND_APPROVE.toString());
 		flow.setTime(TimeUtil.getCurrentTime());
 		flowDao.save(flow);
 		
@@ -130,7 +129,7 @@ public class ApplyServiceImpl implements ApplyService {
 			jedis.setnx("submitForApprove." + applyID, "1");
 		}
 		// checking for update
-		if(applyIDExists && !applyDao.exists(applyID)){
+		if(applyIDExists && !applyDao.existsById(applyID)){
 			throw new ApplyNotFoundException();
 		}
 		
@@ -156,7 +155,7 @@ public class ApplyServiceImpl implements ApplyService {
 		apply.setIp(ip);
 		apply.setUpdateBy(userID);
 		apply.setUpdateTime(TimeUtil.getCurrentTime());
-		apply.setDeleted(Apply.DELETED_FALSE);
+		apply.setDeleted(Dictionary.Deleted.FALSE.toString());
 		applyDao.save(apply);
 		log.info("save apply[id:" + apply.getId() + "] done");
 		if(applyIDExists){
@@ -167,14 +166,14 @@ public class ApplyServiceImpl implements ApplyService {
 	
 	@Override
 	public int delete(Apply apply) {
-		if(!applyDao.exists(apply.getId())){
+		if(!applyDao.existsById(apply.getId())){
 			throw new ApplyNotFoundException();
 		}
 		if(pending(apply)){
 			throw new AppException("2");
 		}
 		
-		apply.setDeleted(Apply.DELETED_TRUE);
+		apply.setDeleted(Dictionary.Deleted.TRUE.toString());
 		apply.setUpdateTime(TimeUtil.getCurrentTime());
 		applyDao.save(apply);
 		return 1;
@@ -182,7 +181,7 @@ public class ApplyServiceImpl implements ApplyService {
 	
 	private boolean pending(Apply apply){
 		return flowDao.countByApplyIDAndStepIn(apply.getId(), 
-					Arrays.asList(ApplyFlow.STEP_PEND_ACCEPT, ApplyFlow.STEP_PEND_APPROVE, ApplyFlow.STEP_PEND_REVIEW))
+					Arrays.asList(Dictionary.FlowStep.PEND_ACCEPT.toString(), Dictionary.FlowStep.PEND_APPROVE.toString(), Dictionary.FlowStep.PEND_REVIEW.toString()))
 				> 0;
 	}
 	
@@ -190,25 +189,25 @@ public class ApplyServiceImpl implements ApplyService {
 	public int approve(Approve approve) throws AppException {
 		
 		// checking
-		if(!applyDao.exists(approve.getApplyID())){
+		if(!applyDao.existsById(approve.getApplyID())){
 			throw new ApplyNotFoundException();
 		}
 		
-		if(approve.getId() != 0l && !approveDao.exists(approve.getId())) {
+		if(approve.getId() != 0l && !approveDao.existsById(approve.getId())) {
 			throw new AppException("3");
 		}
 		
-		approve.setType(Approve.TYPE_APPROVE);
+		approve.setType(Dictionary.ApproveType.APPROVE.toString());
 		approve.setTime(TimeUtil.getCurrentTime());
 		approveDao.save(approve);
 		
-		if(!Approve.RESULT_SAVE.equals(approve.getResult())){
+		if(!Dictionary.ApproveResult.SAVE.toString().equals(approve.getResult())){
 			ApplyFlow flow = new ApplyFlow();
 			flow.setApplyID(approve.getApplyID());
-			if(Approve.RESULT_FAIL.equals(approve.getResult())){
-				flow.setStep(ApplyFlow.STEP_FAILURE);
-			}else if(Approve.RESULT_PASS.equals(approve.getResult())){
-				flow.setStep(ApplyFlow.STEP_APPROVED);
+			if(Dictionary.ApproveResult.FAIL.toString().equals(approve.getResult())){
+				flow.setStep(Dictionary.FlowStep.FAILURE.toString());
+			}else if(Dictionary.ApproveResult.PASS.toString().equals(approve.getResult())){
+				flow.setStep(Dictionary.FlowStep.APPROVED.toString());
 			}
 			flowService.insertFlow(flow);
 		}
@@ -218,24 +217,24 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int review(Approve approve) throws AppException {
 		// checking
-		if(!applyDao.exists(approve.getApplyID())){
+		if(!applyDao.existsById(approve.getApplyID())){
 			throw  new ApplyNotFoundException();
 		}
 		
-		if(approve.getId() != 0l && !approveDao.exists(approve.getId())) {
+		if(approve.getId() != 0l && !approveDao.existsById(approve.getId())) {
 			throw new AppException("3");
 		}
-		approve.setType(Approve.TYPE_REVIEW);
+		approve.setType(Dictionary.ApproveType.REVIEW.toString());
 		approve.setTime(TimeUtil.getCurrentTime());
 		approveDao.save(approve);
 		
-		if(!Approve.RESULT_SAVE.equals(approve.getResult())){
+		if(!Dictionary.ApproveResult.SAVE.toString().equals(approve.getResult())){
 			ApplyFlow flow = new ApplyFlow();
 			flow.setApplyID(approve.getApplyID());
-			if(Approve.RESULT_FAIL.equals(approve.getResult())){
-				flow.setStep(ApplyFlow.STEP_FAILURE);
-			}else if(Approve.RESULT_PASS.equals(approve.getResult())){
-				flow.setStep(ApplyFlow.STEP_REVIEWED);
+			if(Dictionary.ApproveResult.FAIL.toString().equals(approve.getResult())){
+				flow.setStep(Dictionary.FlowStep.FAILURE.toString());
+			}else if(Dictionary.ApproveResult.PASS.toString().equals(approve.getResult())){
+				flow.setStep(Dictionary.FlowStep.REVIEWED.toString());
 			}
 			flowService.insertFlow(flow);
 		}
@@ -246,11 +245,11 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int returnBack(Approve approve) throws AppException {
 		// checking
-		if(!applyDao.exists(approve.getApplyID())){
+		if(!applyDao.existsById(approve.getApplyID())){
 			throw  new ApplyNotFoundException();
 		}
 		
-		if(approve.getId() != 0l && !approveDao.exists(approve.getId())) {
+		if(approve.getId() != 0l && !approveDao.existsById(approve.getId())) {
 			throw new AppException("3");
 		}
 		approve.setType(null);
@@ -260,7 +259,7 @@ public class ApplyServiceImpl implements ApplyService {
 		ApplyFlow flow = new ApplyFlow();
 		
 		flow.setApplyID(approve.getApplyID());
-		flow.setStep(ApplyFlow.STEP_CREATE);
+		flow.setStep(Dictionary.FlowStep.CREATE.toString());
 		flowService.insertFlow(flow);
 				
 		return 0;

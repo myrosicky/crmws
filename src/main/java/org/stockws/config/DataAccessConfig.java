@@ -3,17 +3,16 @@ package org.stockws.config;
 
 import java.util.Properties;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -21,32 +20,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class DataAccessConfig {
-
-	private @Resource Environment env;
+	
+	private final static Logger log = LoggerFactory.getLogger(DataAccessConfig.class);
+	
 	
 	@Autowired
 	private DataSource dataSource;
-
-	@Value("${custom.datasource.driverClassName}")
-	private String driverClassName;
-
-	@Value("${spring.datasource.url}")
-	private String url;
-
-	@Value("${spring.datasource.username}")
-	private String username;
-
-	@Value("${spring.datasource.password}")
-	private String password;
-	
-	@Value("${spring.datasource2.url}")
-	private String url2;
-
-	@Value("${spring.datasource2.username}")
-	private String username2;
-
-	@Value("${spring.datasource2.password}")
-	private String password2;
 	
 	@Value("${spring.jpa.hibernate.ddl-auto}")
 	private String ddlAuto;
@@ -54,6 +33,9 @@ public class DataAccessConfig {
 	@Value("${spring.jpa.hibernate.packageToScan}")
 	private String packageToScan;
 
+	@Value("${spring.jpa.hibernate.dialect}")
+	private String dialect;
+	
 	@Bean
 	HibernateJpaVendorAdapter hibernateJpaVendorAdapter(){
 		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -88,27 +70,22 @@ public class DataAccessConfig {
 //		return txManager;
 //	}
 	
-	@Bean
-	public DataSource dataSource() {
-		BasicDataSource basicDataSource = new BasicDataSource();
-		basicDataSource.setDriverClassName(driverClassName);
-		basicDataSource.setUrl(url2);
-		basicDataSource.setUsername(username2);
-		basicDataSource.setPassword(password2);
-		return basicDataSource;
-	}
+	
 	
 	@Bean
-	public EntityManagerFactory entityManagerFactory() {
+	EntityManagerFactory entityManagerFactory() {
+		log.info("hibernate packageToScan:" + packageToScan);
+		log.info("hibernate hibernate.hbm2ddl.auto:" + ddlAuto);
+		log.info("hibernate hibernate.dialect:" + dialect);
+		
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setDataSource(dataSource());
+		emf.setDataSource(dataSource);
 		emf.setPackagesToScan(packageToScan);
 		emf.setJpaVendorAdapter(hibernateJpaVendorAdapter());
 
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
-//		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
-		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		properties.setProperty("hibernate.dialect", dialect);
 //		properties.setProperty("hibernate.physical_naming_strategy", "org.stockws.context.ArchivePhysicalNamingStrategyImpl");
 
 		emf.setJpaProperties(properties);
@@ -118,8 +95,7 @@ public class DataAccessConfig {
 	}
 	
 	@Bean
-	public PlatformTransactionManager transactionManager() {
-
+	PlatformTransactionManager transactionManager() {
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(entityManagerFactory());
 		return txManager;
@@ -127,7 +103,7 @@ public class DataAccessConfig {
 	
 
 	@Bean
-	public HibernateExceptionTranslator hibernateExceptionTranslator() {
+	HibernateExceptionTranslator hibernateExceptionTranslator() {
 		return new HibernateExceptionTranslator();
 	}
 

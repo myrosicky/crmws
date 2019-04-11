@@ -3,6 +3,7 @@ package org.stockws.service.impl;
 import java.util.List;
 
 import org.business.models.applysystem.Apply;
+import org.business.models.applysystem.Dictionary;
 import org.business.models.applysystem.report.MthApplyRpt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class ReportServiceImpl {
 	
 	
 	public MthApplyRpt[] summaryMonthApply(String startMonth, String endMonth){
-		List<MthApplyRpt> result = applyDao.monthCntByCreateTimeLikeAndDeleted(startMonth, endMonth, Apply.DELETED_FALSE);
+		List<MthApplyRpt> result = applyDao.monthCntByCreateTimeLikeAndDeleted(startMonth, endMonth, Dictionary.Deleted.FALSE.toString());
 		if(log.isDebugEnabled()){
 			log.debug("result.size():" + result.size());
 		}

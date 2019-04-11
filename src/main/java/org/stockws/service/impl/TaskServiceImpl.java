@@ -26,7 +26,8 @@ public class TaskServiceImpl implements TaskService {
 			Integer toIndex) {
 		Assert.isTrue(fromIndex >= 0 && toIndex >= 0, "index over ramge");
 		Assert.isTrue(toIndex - fromIndex + 1 <= maxNumPerReq, "请求记录总数超出限定数！");
-		List<Task> rtnList = taskDao.findTasksByStatus(status,fromIndex,toIndex);
+//		List<Task> rtnList = taskDao.findByStatus(status,fromIndex,toIndex);
+		List<Task> rtnList = null;
 		return rtnList;
 	}
 
@@ -45,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public void removeTask(Task task) {
 		 try {
-			taskDao.deleteTaskById(task.getId());
+			taskDao.deleteById(task.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

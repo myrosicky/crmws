@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.stockws.util.CipherUtil;
 
 import redis.clients.jedis.Jedis;
 
@@ -20,6 +20,8 @@ public class RedisConfig {
 	private @Value("${redis.password}") String password;
 	private @Value("${redis.salt}") String salt;
 	private @Value("${redis.timeout}") int timeout;
+	private @Value("${redis.switch-on}") boolean switchOn;
+	
 	
 
 //	@Bean
@@ -61,9 +63,15 @@ public class RedisConfig {
 	@Bean
 	public Jedis jedis() {
 		log.info("redis server [host:"+host+",port:"+port+"]");
+		if(log.isDebugEnabled()){
+			log.debug("password:" + password);
+			log.debug("MD5(password):" + CipherUtil.MD5(password));
+		}
 		Jedis jedis = new Jedis(host, Integer.parseInt(port), timeout);
-	    jedis.connect();
-	    jedis.auth(new Md5PasswordEncoder().encodePassword(password, salt));
+		if(switchOn){
+		    jedis.connect();
+		    jedis.auth(CipherUtil.MD5(password));
+		}
 		return jedis;
 	}
 	

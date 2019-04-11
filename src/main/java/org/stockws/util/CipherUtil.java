@@ -19,8 +19,8 @@ import java.util.Enumeration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.DigestUtils;
 
 public class CipherUtil {
 
@@ -55,7 +55,8 @@ public class CipherUtil {
 	}
 
 	public static String MD5(String plainText, Object salt) {
-		return new Md5PasswordEncoder().encodePassword(plainText, salt);
+		return DigestUtils.md5DigestAsHex(plainText.getBytes());
+//		return new MessageDigestPasswordEncoder("MD5").encodePassword(plainText, salt);
 	}
 
 	public static boolean MD5Match(String plainText, String hash) {
@@ -63,8 +64,7 @@ public class CipherUtil {
 	}
 
 	public static boolean MD5Match(String plainText, String salt, String hash) {
-		return hash.equals(new Md5PasswordEncoder().encodePassword(plainText,
-				salt));
+		return hash.equals(DigestUtils.md5DigestAsHex(plainText.getBytes()));
 	}
 
 	public void name() throws CertificateException, KeyStoreException,

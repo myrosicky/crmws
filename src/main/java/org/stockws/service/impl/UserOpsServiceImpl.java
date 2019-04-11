@@ -3,6 +3,8 @@ package org.stockws.service.impl;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.business.models.User;
+import org.business.models.UserRole;
+import org.business.models.applysystem.Dictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +12,14 @@ import org.springframework.stereotype.Service;
 import org.stockws.dao.UserDao;
 import org.stockws.service.UserOpsService;
 import org.stockws.util.CipherUtil;
+import org.stockws.util.TimeUtil;
 
 import com.google.common.base.Optional;
 
 @Service
 public class UserOpsServiceImpl implements UserOpsService {
 
-	private final static Logger logger = LoggerFactory.getLogger(UserOpsServiceImpl.class);
+	private final static Logger log = LoggerFactory.getLogger(UserOpsServiceImpl.class);
 
 	@Autowired
 	private UserDao userDao;
@@ -26,7 +29,8 @@ public class UserOpsServiceImpl implements UserOpsService {
 	 */
 	@Override
 	public User findByUsername(String username) {
-		return userDao.findByUsername(username);
+		 User user = userDao.findByUsername(username);
+		 return user;
 	}
 
 	/* (non-Javadoc)
@@ -61,8 +65,10 @@ public class UserOpsServiceImpl implements UserOpsService {
 	public void saveUser(String username, String password, String remoteHost) {
 		User user = new User();
 		user.setUsername(username);
-		user.setPassword(CipherUtil.MD5(password));
+		user.setPassword(CipherUtil.BCryptEncode(password));
 		user.setGeneral_ip(remoteHost);
+		user.setRegisterDate(TimeUtil.getCurrentTime());
+		user.setDeleted(Dictionary.Deleted.FALSE.toString());
 		saveUser(user);
 	}
 

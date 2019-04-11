@@ -9,13 +9,10 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TaskDao extends CrudRepository<Task, Long> {
 
-	public Task findTasksByStatus(String key);
+	public Task findByStatus(String status);
 
-	public Task findTaskById(String key);
+	public Task findById(String key);
 
-	public List<Task> findTasksByStatus(Status status, Integer fromIndex,
-			Integer toIndex);
-	
-	public int deleteTaskById(long id) throws Exception;
+	public int deleteById(long id) throws Exception;
 
 }
